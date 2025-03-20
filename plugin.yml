@@ -1,0 +1,6 @@
+name: Generator
+version: 0.43
+main: pink.rat.Application
+api-version: 1.21.4
+load: STARTUP
+world-generator: pink.rat.Application
