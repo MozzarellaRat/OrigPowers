@@ -1,7 +1,6 @@
 package pink.rat.Powers;
 
-import java.util.function.Supplier;
-
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -16,16 +15,20 @@ public class Application extends JavaPlugin implements Listener {
     public void onEnable() {
         System.out.println("The sparrow prince lies somewhere way up ahead.");
         PowerManager = new PowerManager();
-        DummyPower rp = new DummyPower();
-        AustraliaPower r2 = new AustraliaPower();
-        PowerManager.addPower(DummyPower::new);
+        PowerManager.addPower("dodod",DummyPower::new);
         instance = this;
         this.getCommand("setpower").setExecutor(new Setpower());
         this.getCommand("power").setExecutor(new GetPower());
+        this.getServer().getPluginManager().registerEvents(PowerManager, this);
     }
 
     @Override
-    public void onDisable() {}
+    public void onDisable() {
+    	for (Player p : this.getServer().getOnlinePlayers()) {
+    		PowerManager.savePower(p);
+    		PowerManager.removePower(p);
+    	}
+    }
 
     
     @EventHandler

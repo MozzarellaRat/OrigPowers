@@ -30,7 +30,7 @@ public class AustraliaPower extends Power {
 
 	@Override
 	public String getName() {
-		return "australia_power";
+		return "aussie";
 	}
 
 	@Override

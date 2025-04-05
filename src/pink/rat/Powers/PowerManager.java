@@ -1,18 +1,17 @@
 package pink.rat.Powers;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -20,22 +19,40 @@ import org.bukkit.persistence.PersistentDataType;
 
 public class PowerManager implements Listener {
 
-    private final List<Supplier<Power>> externalPowers = new ArrayList<>();
+    private final HashMap<String, Supplier<Power>> externalPowers = new HashMap<>();
     private final HashMap<UUID, Power> playerPowers = new HashMap<>();
    
     
     @SafeVarargs
-    //After plethora of confirmation this is infact type safe.
-    public final void addPower(Supplier<Power>... power) {
-        for (Supplier<Power> p : power) externalPowers.add(p);
+    //After plethora of confirmation this is infact type safe, or is it? mwahhahahah!.
+    public final void addPower(String ID, Supplier<Power>... power) { //Yeah uhm one id rules all ig? I'll fix this later is a redundant method.
+        for (Supplier<Power> p : power) externalPowers.put(ID, p);
     }
 
-    public final void addPower(Supplier<Power> power) {
-        externalPowers.add(power);
+    public final void addPower(String ID, Supplier<Power> power) {
+        externalPowers.put(ID, power);
     }
     
     public final Power getPower(Player player) {
-        return playerPowers.get(player.getUniqueId());
+    	Power p = playerPowers.get(player.getUniqueId());
+    	if (p != null) return p;
+        NamespacedKey key = new NamespacedKey(Application.getInstance(), "orig_power");
+        PersistentDataContainer dataContainer = player.getPersistentDataContainer();
+        String powerName = dataContainer.get(key, PersistentDataType.STRING);
+        if (powerName == null) return new DummyPower();
+        return getPowerFromString(powerName);
+    }
+    
+    public Power getPowerFromString(String powerName) {
+    	PowerType p = PowerType.fromString(powerName);
+    	Power power = new DummyPower();
+    	if (p != null) {
+    		power = p.get();
+    	} else {
+    		Supplier<Power> i = externalPowers.get(powerName);
+    		if (i != null) power = i.get();
+    	}
+        return power;
     }
 
     public final void printPowerDescription(Player player, Power power) {
@@ -45,84 +62,67 @@ public class PowerManager implements Listener {
         }
     }
 
-    public void setPower(Player player, Power power) {
+    public Power setPower(Player player, Power power) {
         UUID uuid = player.getUniqueId();
         Power currentPower = playerPowers.get(uuid);
-
         if (currentPower != null) {
             currentPower.powerDeactivate(player);
             HandlerList.unregisterAll(currentPower); 
         }
-
         power.powerActivate(player);
         Application.getInstance().getServer().getPluginManager().registerEvents(power, Application.getInstance());
         playerPowers.put(uuid, power);
-
         printPowerDescription(player, power);
+        
+        System.out.println("The power: " + power.getName() + " has been registered to player: " + player.getName() );
+        
+        return power;
     }
 
-    public boolean setPower(Player player, String powerName) {
-    	PowerType p = PowerType.fromString(powerName);
-    	if (p != null) {
-    		setPower(player, p.get());
-    		return true;
-    	}
-        for (Power power : externalPowers) {
-            if (power.getName().equalsIgnoreCase(powerName)) {
-                try {
-                    Constructor<?> constructor = power.getClass().getDeclaredConstructor();
-                    Power newPower = (Power) constructor.newInstance();
-                    setPower(player, newPower);
-                    return true;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return false;
-                }
-            }
-        }
-
-        setPower(player, new DummyPower());
-        return false;
+    public Power setPower(Player player, String powerName) {
+        return setPower(player, getPowerFromString(powerName));
     }
 
-    public void removePlayerPower(Player player) {
-        UUID uuid = player.getUniqueId();
+    public void removePower(Player player) {
+        UUID uuid = player.getUniqueId(); 
         Power currentPower = playerPowers.get(uuid);
-
-        if (currentPower != null) {
-            currentPower.powerDeactivate(player);
-            HandlerList.unregisterAll(currentPower); 
-        }
-
+        currentPower.powerDeactivate(player);
+        HandlerList.unregisterAll(currentPower);
         playerPowers.remove(uuid);
+        System.out.println("The power: " + currentPower.getName() + " has been deregistered from player: " + player.getName() );
     }
-
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        NamespacedKey key = new NamespacedKey(Application.getInstance(), "orig_power");
-        PersistentDataContainer dataContainer = player.getPersistentDataContainer();
-
-        String powerName = dataContainer.get(key, PersistentDataType.STRING);
-
-        if (powerName == null) {
-            player.sendMessage("Whoops! We couldn't find a valid power stored for you.");
-            setPower(player, new DummyPower());
-        } else {
-            setPlayerPower(player, powerName);
-        }
-    }
-
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
+    
+    public Boolean savePower(Player player ) {
         NamespacedKey key = new NamespacedKey(Application.getInstance(), "orig_power");
         PersistentDataContainer dataContainer = player.getPersistentDataContainer();
 
         Power currentPower = playerPowers.get(player.getUniqueId());
         if (currentPower != null) {
             dataContainer.set(key, PersistentDataType.STRING, currentPower.getName());
-            removePlayerPower(player);
+            return true;
         }
+        return false;
     }
+   
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        Power p = getPower(player);
+        setPower(player, p);
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+    	if (savePower(event.getPlayer())) {
+    		removePower(event.getPlayer());
+    	}
+    }
+    
+    @EventHandler
+    public void playerChat(AsyncPlayerChatEvent event) {
+    	event.setCancelled(true);
+    	Bukkit.broadcastMessage(getPower(event.getPlayer()).getFancyName()+ChatColor.GRAY+event.getPlayer().getDisplayName()+" » "+event.getMessage());
+    }
+
 }

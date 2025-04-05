@@ -45,7 +45,6 @@ public class DummyPower extends Power {
 			e.setCancelled(true);
 			e.getPlayer().sendMessage("Poof!");
 			setCooldown(1);
-			
 		}
 	}
 }

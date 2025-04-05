@@ -5,7 +5,9 @@ import java.util.function.Supplier;
 public enum PowerType {
 	
 	DUMMY(DummyPower::new),
-	AUSTRALIAN(AustraliaPower::new);
+	AUSSIE(AustraliaPower::new),
+	LACTOSE(LactosePower::new)
+	;
 	
 	private final Supplier<Power> constructor;
 	

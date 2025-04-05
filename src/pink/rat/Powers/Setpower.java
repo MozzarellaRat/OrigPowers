@@ -11,9 +11,8 @@ public class Setpower implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
     	if (sender instanceof Player && args.length >= 1) {
     		Player p = (Player) sender;
-    		Boolean returnV = Application.PowerManager.setPower(p, args[0]);
-    		if (re)
-    		return returnV;
+    		Application.PowerManager.setPower(p, args[0]);
+    		return true;
     	}
 		return false;
     	
