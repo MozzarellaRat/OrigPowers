@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 
+import pink.rat.Orig.Power;
+
 public class DummyPower extends Power {
 
 	public DummyPower() {

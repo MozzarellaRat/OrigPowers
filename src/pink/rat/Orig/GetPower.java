@@ -1,9 +1,11 @@
-package pink.rat.Powers;
+package pink.rat.Orig;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import pink.rat.Powers.DummyPower;
 
 public class GetPower implements CommandExecutor {
 

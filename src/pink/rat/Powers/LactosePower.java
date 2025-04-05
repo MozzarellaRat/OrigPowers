@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 
+import pink.rat.Orig.Power;
+
 public class LactosePower extends Power {
 
 	@Override
@@ -30,7 +32,7 @@ public class LactosePower extends Power {
 
 	@Override
 	public String getFancyName() {
-		return ChatColor.translateAlternateColorCodes('&',"&9Ｃ₁₂&cｈ₂₂&dｏ₁₁");
+		return ChatColor.translateAlternateColorCodes('&',"C12H22O11");
 	}
 
 	@Override

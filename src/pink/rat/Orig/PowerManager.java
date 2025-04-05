@@ -1,4 +1,4 @@
-package pink.rat.Powers;
+package pink.rat.Orig;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -16,6 +16,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+
+import pink.rat.Powers.DummyPower;
 
 public class PowerManager implements Listener {
 

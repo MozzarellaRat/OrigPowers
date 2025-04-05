@@ -1,4 +1,4 @@
-package pink.rat.Powers;
+package pink.rat.Orig;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

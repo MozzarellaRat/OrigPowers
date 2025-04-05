@@ -11,6 +11,8 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import pink.rat.Orig.Power;
+
 public class AustraliaPower extends Power {
 
 	@Override

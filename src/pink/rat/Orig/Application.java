@@ -1,4 +1,4 @@
-package pink.rat.Powers;
+package pink.rat.Orig;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -6,6 +6,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import org.bukkit.plugin.java.JavaPlugin;
+
+import pink.rat.Powers.DummyPower;
 
 public class Application extends JavaPlugin implements Listener {
 	protected static Application instance;

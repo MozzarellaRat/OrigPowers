@@ -1,4 +1,4 @@
-package pink.rat.Powers;
+package pink.rat.Orig;
 
 import org.bukkit.event.Listener;
 

@@ -1,6 +1,10 @@
-package pink.rat.Powers;
+package pink.rat.Orig;
 
 import java.util.function.Supplier;
+
+import pink.rat.Powers.AustraliaPower;
+import pink.rat.Powers.DummyPower;
+import pink.rat.Powers.LactosePower;
 
 public enum PowerType {
 	
