@@ -1,6 +1,13 @@
-name: Generator
-version: 0.43
-main: pink.rat.Application
+name: OrigPowers
+version: 1.0
+main: pink.rat.Powers.Application
 api-version: 1.21.4
 load: STARTUP
-world-generator: pink.rat.Application
+
+commands:
+   setpower:
+      description: Sets your current power.
+      usage: /setpower <name>
+   power:
+      description: Gets your current power.
+      usage: /power
