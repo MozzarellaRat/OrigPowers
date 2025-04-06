@@ -4,13 +4,15 @@ import java.util.function.Supplier;
 
 import pink.rat.Powers.AustraliaPower;
 import pink.rat.Powers.DummyPower;
+import pink.rat.Powers.EggPower;
 import pink.rat.Powers.LactosePower;
 
 public enum PowerType {
 	
 	DUMMY(DummyPower::new),
 	AUSSIE(AustraliaPower::new),
-	LACTOSE(LactosePower::new)
+	LACTOSE(LactosePower::new),
+	EGG(EggPower::new)
 	;
 	
 	private final Supplier<Power> constructor;

@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 
+import pink.rat.Orig.Application;
 import pink.rat.Orig.Power;
 
 public class DummyPower extends Power {
@@ -43,6 +44,9 @@ public class DummyPower extends Power {
 	
 	@EventHandler
 	public void playerSwapHands(PlayerSwapHandItemsEvent e) {
+		Power power = Application.PowerManager.getPower(e.getPlayer());
+		if (!(power.getClass().equals(this.getClass()))) return;
+
 		if (getCooldown() <= 0) {
 			e.setCancelled(true);
 			e.getPlayer().sendMessage("Poof!");

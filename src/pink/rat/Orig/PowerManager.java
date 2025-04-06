@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -25,12 +24,17 @@ public class PowerManager implements Listener {
     private final HashMap<UUID, Power> playerPowers = new HashMap<>();
    
     
-    @SafeVarargs
+    @SafeVarargs @Deprecated
     //After plethora of confirmation this is infact type safe, or is it? mwahhahahah!.
-    public final void addPower(String ID, Supplier<Power>... power) { //Yeah uhm one id rules all ig? I'll fix this later is a redundant method.
+    public final void addPower(String ID, Supplier<Power>... power) { //Yeah uhm one id rules all ig? I'll fix this later, but it is a redundant method.
         for (Supplier<Power> p : power) externalPowers.put(ID, p);
     }
-
+    /**
+     * Used to add powers created "out of plugin".
+     * 
+     * @param ID Used to idenify and store the power on players.
+     * @param power The power registed to the id.
+     */
     public final void addPower(String ID, Supplier<Power> power) {
         externalPowers.put(ID, power);
     }
@@ -122,9 +126,8 @@ public class PowerManager implements Listener {
     }
     
     @EventHandler
-    public void playerChat(AsyncPlayerChatEvent event) {
-    	event.setCancelled(true);
-    	Bukkit.broadcastMessage(getPower(event.getPlayer()).getFancyName()+ChatColor.GRAY+event.getPlayer().getDisplayName()+" » "+event.getMessage());
+    public void playerChat(AsyncPlayerChatEvent event) {						
+    	event.setFormat(getPower(event.getPlayer()).getFancyName()+ChatColor.GRAY+"%s » %s");
     }
 
 }

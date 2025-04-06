@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 
+import pink.rat.Orig.Application;
 import pink.rat.Orig.Power;
 
 public class LactosePower extends Power {
@@ -42,6 +43,10 @@ public class LactosePower extends Power {
 	
 	@EventHandler
 	public void drinkMilk(PlayerItemConsumeEvent e) {
+		
+		Power power = Application.PowerManager.getPower(e.getPlayer());
+		if (!(power.getClass().equals(this.getClass()))) return;
+		
 		if (e.getItem().getType().equals(Material.MILK_BUCKET)) {
 			e.getPlayer().sendMessage("Congrats you shit yourself");
 		}

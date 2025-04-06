@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import pink.rat.Orig.Application;
 import pink.rat.Orig.Power;
 
 public class AustraliaPower extends Power {
@@ -47,11 +48,17 @@ public class AustraliaPower extends Power {
 	
 	@EventHandler
 	public void respawn(PlayerRespawnEvent e) {
+		Power power = Application.PowerManager.getPower(e.getPlayer());
+		if (!(power.getClass().equals(this.getClass()))) return;
+		
 		e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, Integer.MAX_VALUE, 3, false, false));
 	}
 	
 	@EventHandler
 	public void sneak(PlayerToggleSneakEvent e) {
+		Power power = Application.PowerManager.getPower(e.getPlayer());
+		if (!(power.getClass().equals(this.getClass()))) return;
+		
 		Player p = e.getPlayer();
 		if (e.isSneaking()) {
 			p.removePotionEffect(PotionEffectType.LEVITATION);

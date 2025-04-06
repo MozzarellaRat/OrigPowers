@@ -1,6 +1,6 @@
 name: OrigPowers
 version: 1.0
-main: pink.rat.Powers.Application
+main: pink.rat.Orig.Application
 api-version: 1.21.4
 load: STARTUP
 
