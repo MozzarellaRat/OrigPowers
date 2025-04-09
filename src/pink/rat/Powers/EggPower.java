@@ -18,7 +18,6 @@ import org.bukkit.util.Vector;
 import pink.rat.Orig.Application;
 import pink.rat.Orig.Power;
 
-public class EggPower extends Power implements Listener {
 public class EggPower extends Power {
 
 	@Override
