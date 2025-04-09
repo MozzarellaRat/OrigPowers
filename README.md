@@ -6,15 +6,22 @@ Orig Powers aims to recreate the Power features present on the "Orig III" plot o
 > This project is still in its early stages.
 > This project may not contain the most optimized code.
 
-#### Skip to:
+<details><summary>Skip to:</summary>
+
+- [Creating a power](#creating-a-power)
+- [Registering a power](#registering-a-out-of-plugin-power)
 - [Contributing](#contributing)
+- [Forking](#forking)
+
+</details>
+
 
 
 ### TODO:
 - [ ] Create a better system to handle events in powers.
 - [ ] Add more powers!
 - [X] Create a "ticker" to handle power loops.
-- [ ] Optimize PowerManager
+- [ ] Optimize/Cleanup the PowerManager
 - [ ] Use a modulo based timer system instead of a hashmap countdown system to trigger hearbeat loops. 
 
 ---
@@ -98,18 +105,40 @@ public class MyCustomPower extends JavaPlugin {
 }
 ```
 
+### Issues 
+
+If you choose to report a issue include:
+* Info on the host environment*
+* What triggered the issue ( what were you doing? )
+* Screenshots
+* The server log*
+
+__"*" = Not required but helpful.__
+
+EXAMPLE:
+```
+Cooldown not working as expected
+
+Despite indicating a one second cooldown, the ability can be spammed.
+
+[image_4-8-25.png], [log.txt]
+```
+
+Make sure to report the issues in the issue tab instead of pull requests.
+
 ### Contributing
 
 Please use Generative AI only for problem-solving or brainstorming solutions. Do not use it to generate code for this project.
 
 When creating a pull request follow the basic naming convention below:
-- `BUGFIX or FEATURE`: `Name of post`
+- `BUGFIX, FEATURE, or MINOR`: `Name of post`
 
 Example Titles:
 ```
 FEATURE: "Nova" power,
 BUGFIX: Incorrect method call in "Application.java",
 BUGFIX: PowerTicker may stop registering Powers
+MINOR: Updated a power description to include color.
 ```
 
 In your Pull request make sure to outline what you've changed in a easy to read format.
@@ -118,3 +147,7 @@ Exmaple:
 ```
 I've changed the PowerManagers getPower() to return a `Supplier<Power>` instead of `Power`
 ```
+
+### Forking
+
+When forking the repository add `bungeecord-chat` and `spigot-api` to your classpath, __we do not use any dependency managers__. Use the latest version of PaperMC to test your fork. We recommend using the latest version of Eclipse & Github Desktop to develop the project.
