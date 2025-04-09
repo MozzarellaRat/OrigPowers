@@ -11,7 +11,6 @@ import org.bukkit.entity.Egg;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.util.Vector;
@@ -20,6 +19,7 @@ import pink.rat.Orig.Application;
 import pink.rat.Orig.Power;
 
 public class EggPower extends Power implements Listener {
+public class EggPower extends Power {
 
 	@Override
 	public void powerActivate(Player p) {

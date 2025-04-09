@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -13,8 +16,9 @@ import org.bukkit.potion.PotionEffectType;
 
 import pink.rat.Orig.Application;
 import pink.rat.Orig.Power;
+import pink.rat.Orig.PowerTicker;
 
-public class AustraliaPower extends Power {
+public class AustraliaPower extends Power implements PowerTicker {
 
 	@Override
 	public void powerActivate(Player p) {
@@ -66,6 +70,20 @@ public class AustraliaPower extends Power {
 		} else {
 			p.removePotionEffect(PotionEffectType.SLOW_FALLING);
 			p.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, Integer.MAX_VALUE, 5, false, false));
+		}
+	}
+
+	@Override
+	public int tickDelay() {
+		return 2;
+	}
+
+	@Override
+	public void tick(Player p) {
+		World world = p.getWorld();
+		Block block = world.getBlockAt(p.getLocation().add(0, 2, 0));
+		if (!block.getType().equals(Material.AIR)) {
+			p.sendMessage("No air");
 		}
 	}
 }

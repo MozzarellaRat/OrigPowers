@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import pink.rat.Powers.DummyPower;
 
@@ -22,6 +23,7 @@ public class PowerManager implements Listener {
 
     private final HashMap<String, Supplier<Power>> externalPowers = new HashMap<>();
     private final HashMap<UUID, Power> playerPowers = new HashMap<>();
+    private final HashMap<UUID, Integer> playerTickers = new HashMap<>();
    
     
     @SafeVarargs @Deprecated
@@ -29,6 +31,7 @@ public class PowerManager implements Listener {
     public final void addPower(String ID, Supplier<Power>... power) { //Yeah uhm one id rules all ig? I'll fix this later, but it is a redundant method.
         for (Supplier<Power> p : power) externalPowers.put(ID, p);
     }
+    
     /**
      * Used to add powers created "out of plugin".
      * 
@@ -72,10 +75,13 @@ public class PowerManager implements Listener {
         UUID uuid = player.getUniqueId();
         Power currentPower = playerPowers.get(uuid);
         if (currentPower != null) {
-            currentPower.powerDeactivate(player);
-            HandlerList.unregisterAll(currentPower); 
+        	removePower(player);
         }
         power.powerActivate(player);
+        if (power instanceof PowerTicker) {
+        	System.out.println("The power: " + power.getName() + " is a PowerTicker");
+        	playerTickers.put(uuid, ((PowerTicker) power).tickDelay());
+        }
         Application.getInstance().getServer().getPluginManager().registerEvents(power, Application.getInstance());
         playerPowers.put(uuid, power);
         printPowerDescription(player, power);
@@ -94,6 +100,10 @@ public class PowerManager implements Listener {
         Power currentPower = playerPowers.get(uuid);
         currentPower.powerDeactivate(player);
         HandlerList.unregisterAll(currentPower);
+        if (currentPower instanceof PowerTicker) {
+        	playerTickers.remove(uuid);
+        	System.out.println("The power: " + currentPower.getName() + " has been deregistered for its PowerTicker");
+        }
         playerPowers.remove(uuid);
         System.out.println("The power: " + currentPower.getName() + " has been deregistered from player: " + player.getName() );
     }
@@ -109,6 +119,28 @@ public class PowerManager implements Listener {
         }
         return false;
     }
+    
+    public void startTicker() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (UUID uuid : playerTickers.keySet()) {
+                    Power power = playerPowers.get(uuid);
+                    if (power instanceof PowerTicker ticker) {
+                        int delay = ticker.tickDelay(); 
+                        int current = playerTickers.getOrDefault(uuid, delay);
+                        if (current <= 1) {
+                            ticker.tick(Application.getInstance().getServer().getPlayer(uuid));
+                            playerTickers.put(uuid, delay);
+                        } else {
+                        	playerTickers.put(uuid, current - 1); //This method is very inefficient and we should find better ways todo this in the future.
+                        }                                         //Writing to a hashmap every tick just isn't great
+                    }
+                }
+            }
+        }.runTaskTimer(Application.getInstance(), 1L, 1L); 
+    }
+
    
 
     @EventHandler
